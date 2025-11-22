@@ -16,7 +16,7 @@ const Page = () => {
             alt="naija move" 
             />
           </div>
-          <h1 className="font-bold md:text-[1.2rem] text-[1rem]">MUSAFIR EXPRESS - BOOK A RIDE</h1>
+          <h1 className="font-bold md:text-[1.2rem] text-[1rem]">MUSAFIR EXPRESS - BOOK A TRIP</h1>
             </section>
         <MusafirForm/>
         </section>

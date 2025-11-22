@@ -13,17 +13,24 @@ if (!DB_NAME) {
 
 
 
-export const connectToDb = ()=>{
+export const connectToDb = async()=>{
 
     try {
         mongoose.connect(MONGO_URL,{dbName:DB_NAME})
         console.log("connected successfully");
+
+
+        return {
+            success:true,
+            message:"connected to db successfully"
+        }
         
     } catch (error) {
         
         // console.log(error);
    
-    console.log("an error occured");
+        console.log("an error occured");
+        return {success:false,message:"unable to connect to db"}
     
 
         

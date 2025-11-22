@@ -3,13 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {  z } from "zod"
-import { FlutterWaveButton, closePaymentModal } from 'flutterwave-react-v3';
-
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { Button } from "@/components/ui/button"
+import { v4 as uuidv4 } from "uuid";
 import {
   Form,
   FormControl,
-  
   FormField,
   FormItem,
   FormLabel,
@@ -22,6 +21,9 @@ import { schoolsAndDestination, typeSchoolAndLocations } from "@/app/utils/schoo
 import { Checkbox } from "../ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { FlutterWaveResponse } from "flutterwave-react-v3/dist/types";
+import { useMutation } from "@tanstack/react-query";
+import Script from "next/script";
+import { useModalStore } from "@/store/useModalStore";
 
 
 
@@ -45,13 +47,13 @@ const formSchema = z.object({
     emergencyName:z.string().min(1,{
       message:"Field can't be empty"
     }),
-    bigLuggage: z.enum(["yes", "no"], {
+    bigLuggage: z.enum(["yes", "no",], {
       message: "Please select yes or no",
     }),
 })
 
 const extendFormSchema = formSchema.extend({
-  amount:z.string(),
+  farePrice:z.number(),
 })
 type formDetails = z.infer<typeof extendFormSchema>
 
@@ -66,9 +68,13 @@ export function MusafirForm() {
     emergencyName:"",
     emergencyContact:"",
     bigLuggage:"no",
-    amount:""
+    farePrice:0
 
   })
+  const [availableDestinations,setAvailableDestinations] = useState<string[] | []>([])
+  const [farePrice,setFarePrice] = useState<number>(0)
+ const {openModal} = useModalStore()
+  const [bigLugCheck,setBigLugCheck] = useState<"yes" | "no">()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -85,64 +91,226 @@ export function MusafirForm() {
         },
       })
      
+      const mutation = useMutation({
+        mutationFn:handleFormSubmit,
+        onSuccess:(data)=>{
+console.log("successful");
+console.log(data);
+if (data.success) {
+  const config = {
+    public_key: process.env.NEXT_PUBLIC_FW_PUBLIC_KEY as string,
+    tx_ref: `trx-${data.data.bookingId}`,
+    amount: data.data.farePrice,
+    currency: "NGN",
+
+    customer: {
+      email: data.data.email,
+      name: data.data.firstName,
+      phone_number: data.data.phoneNumber,
+      bookingId:data.data.bookingId
+    },
+
+    meta: {
+      bookingId:data.data.bookingId,
+    },
+
+    customizations: {
+      title: "Transport Booking",
+      description: "Payment for booking",
+      logo: "https://res.cloudinary.com/dg9l9yvxu/image/upload/v1763723706/naijamove_ernsyw.jpg",
+    },
+
+    callback: async(response: any) => {
+      console.log("Payment response:", response);
+
+      const res = await fetch("/api/book-trip/payment/verify",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({transaction_id:response.transaction_id, tx_ref:response.tx_ref})
+      })
+      const verifyResponse = await res.json()
+
+      console.log(verifyResponse);
+      if (verifyResponse.success) {
+        openModal("you have successfully booked a trip")
+        if (window.FlutterwaveCheckout) {
+          window.FlutterwaveCheckout.close();
+        }
+      }
+
+
+
+      
+
+    },
+
+    onclose: () => {
+      console.log("Payment closed");
+    },
+  };
+
+
+  window.FlutterwaveCheckout(config);
+}
+
+else{
+  alert("unable to complete request")
+}
+
+
+        },
+        onError:(err)=>{
+          console.log(err);
+          
+console.log("something went wrong");
+
+        }
+      })
 
 
 
       // Flutter wave config
 const name = "Ade"
 const email = "aadebesta@gmail.com"
-      const config = {
-        public_key:process.env.NEXT_PUBLIC_FW_PUBLIC_KEY as string,
-        tx_ref: Date.now().toString(),
-        amount: 500,
-        currency: 'NGN',
-        payment_options: 'card,mobilemoney,ussd',
-        customer: {
-          name,
-          email,
-          phone_number: '08144835189',
-        },
-        customizations: {
-          title: 'Book Ride',
-          description: 'Payment for ride',
-          logo: 'https://res.cloudinary.com/dg9l9yvxu/image/upload/v1763723706/naijamove_ernsyw.jpg',
-        },
-      };
-
-
-      const fwConfig = {
-        ...config,
-        text: 'Pay for ride!',
-        callback: (response:FlutterWaveResponse) => {
-           console.log(response);
-          closePaymentModal() 
-        },
-        onClose: () => {
-console.log("model close");
-
-
-        },
-      };
 
 
 
-      useEffect(()=>{
-        const dataTime = new Date()
-        console.log(dataTime);
-      },[])
+
+
+async function handleFormSubmit(formDetails:Partial<formDetails>) {
+  const dateTime =  new Date()
+
+  const res = await fetch("/api/book-trip/initiate",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({...formDetails,farePrice:farePrice,bookingId:uuidv4(),date:dateTime})
+  })
+
+
+  const response = await res.json()
+  return response
+}
+    
+
+
+
+      // useEffect(()=>{
+      //   const dataTime = new Date()
+      //   console.log(dataTime);
+      // },[])
       // 2. Define a submit handler.
       function onSubmit(values: z.infer<typeof formSchema>) {
-    
-        console.log(values)
 
+        const id = uuidv4()
+        mutation.mutate({...values})
+ 
+        // const config = {
+        //   public_key: process.env.NEXT_PUBLIC_FW_PUBLIC_KEY as string,
+        //   tx_ref: `trx-${Date.now()}`,
+        //   amount: farePrice,
+        //   currency: "NGN",
+      
+        //   customer: {
+        //     email: values.email,
+        //     name: values.firstName,
+        //     phone_number: values.phoneNumber,
+        //   },
+      
+        //   meta: {
+        //     bookingId:uuidv4(),
+        //   },
+      
+        //   customizations: {
+        //     title: "Transport Booking",
+        //     description: "Payment for booking",
+        //     logo: "/logo.png",
+        //   },
+      
+        //   callback: (response: any) => {
+        //     console.log("Payment response:", response);
+        //     // close modal automatically
+        //   },
+      
+        //   onclose: () => {
+        //     console.log("Payment closed");
+        //   },
+        // };
+      
+      
+        // window.FlutterwaveCheckout(config);
+       
+       
         
       }
-  const [availableDestinations,setAvailableDestinations] = useState<string[] | []>([])
-
-
+      
+      
   const school = form.watch("school")
+const destination = form.watch("destination")
+const bigLuggage = form.watch("bigLuggage")
 
 
+
+useEffect(()=>{
+if (bigLuggage == "yes") {
+  setFarePrice(prev => prev + 600)
+  setBigLugCheck("yes")
+}
+else if (bigLuggage == "no" && bigLugCheck == "yes") {
+  setFarePrice(prev => prev - 600)
+  setBigLugCheck("no")
+  
+}
+
+
+},[bigLuggage])
+useEffect(()=>{
+
+  form.resetField("bigLuggage")
+  setBigLugCheck("no")
+// for futa
+  if (school == "FUTA") {
+    if (destination == "Ibadan") {
+      setFarePrice(4500)
+      return
+      
+    }else if (destination == "Lagos") {
+      setFarePrice(9800)
+      return
+    }
+    else if(destination == "Osogbo"){
+      setFarePrice(4300)
+      return
+
+    }
+      
+      setFarePrice(0)
+      return
+    }
+    //  FOR PSSA AKURA
+    else if (school == "PSSA AKURE") {
+      if (destination == "Ibadan") {
+        setFarePrice(6500)
+        return
+        
+      }else if (destination == "OUI") {
+        setFarePrice(5000)
+        return
+      }
+      setFarePrice(0)
+      return
+     
+  }
+
+  else{
+    setFarePrice(0)
+  }
+
+
+},[school,destination])
 useEffect(()=>{
 
   if (!school) {
@@ -157,9 +325,12 @@ useEffect(()=>{
 },[school])
   return (
     <>
-   {/* <div>
-   <FlutterWaveButton {...fwConfig} />
-   </div> */}
+    {/* flutter wave script */}
+ <Script
+        src="https://checkout.flutterwave.com/v3.js"
+        strategy="lazyOnload"
+      />
+
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
@@ -370,11 +541,16 @@ useEffect(()=>{
   )}
 />
 
+<div>
+  <div className="text-lg">Fare Price: <span className="font-semibold">₦{farePrice}</span> </div>
+</div>
 
 
         {/* submit button */}
         <div className="flex items-center justify-center ">
-        <Button className="w-[30%]" type="submit">Submit</Button>
+        <Button
+        disabled={mutation.isPending ? true : false}
+        className="w-[30%]" type="submit">{mutation.isPending ? "loading" :"Submit"}</Button>
 
         </div>
       </form>

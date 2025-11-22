@@ -45,5 +45,10 @@ export const schoolsAndDestination:typeSchoolAndLocations[] = [
   school:"OOU",
   destinations:["Lagos","Ibadan"],
 },
+{
+    id:9,
+  school:"PSSA AKURE",
+  destinations:["Ibadan","OUI"],
+},
 
 ]
