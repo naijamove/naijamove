@@ -100,7 +100,7 @@ if (data.success) {
   const config = {
     public_key: process.env.NEXT_PUBLIC_FW_PUBLIC_KEY as string,
     tx_ref: `trx-${data.data.bookingId}`,
-    amount: data.data.farePrice,
+    amount: farePrice,
     currency: "NGN",
 
     customer: {
@@ -114,6 +114,7 @@ if (data.success) {
       bookingId:data.data.bookingId,
     },
 
+    // 1923206313
     customizations: {
       title: "Transport Booking",
       description: "Payment for booking",
@@ -134,7 +135,7 @@ if (data.success) {
 
       console.log(verifyResponse);
       if (verifyResponse.success) {
-        openModal("you have successfully booked a trip")
+        openModal("you have successfully booked a trip,a mail has been sent to your email address")
         if (window.FlutterwaveCheckout) {
           window.FlutterwaveCheckout.close();
         }
@@ -177,6 +178,25 @@ const email = "aadebesta@gmail.com"
 
 
 
+// const handleCheck = async()=>{
+//   const res = await fetch("/api/book-trip/payment/verify",{
+//     method:"POST",
+//     headers:{
+//       "Content-Type":"application/json"
+//     },
+//     body:JSON.stringify({transaction_id:1923206313, tx_ref:"trx-ce703eed-1c2e-43f2-b534-4faf8e74bffc"})
+//   })
+//   const verifyResponse = await res.json()
+
+//   console.log(verifyResponse);
+//   if (verifyResponse.success) {
+//     openModal("you have successfully booked a trip")
+
+//   }
+// }
+// useEffect(()=>{
+// handleCheck()
+// },[])
 
 
 async function handleFormSubmit(formDetails:Partial<formDetails>) {
@@ -535,7 +555,7 @@ useEffect(()=>{
 
       <FormMessage />
      <div className="text-red-500 font-semibold">
-      <span>Note</span>: selecting "Yes" attracts an extra fee of #600
+      <span>Note</span>: selecting "Yes" attracts an extra fee of ₦600
      </div>
     </FormItem>
   )}

@@ -66,6 +66,10 @@ const bookTripSchema  = new Schema ({
         type:String,
         default:null
     },
+    paymentRef:{
+      type:String,
+      default:null
+    },
     date:{
         type:Date,
         required:true
@@ -76,5 +80,5 @@ const bookTripSchema  = new Schema ({
 )
 
 
-const BookTrip = models.BookTrip || model("BookTrip",bookTripSchema)
+const BookTrip = models.Booking || model("Booking",bookTripSchema)
 export default BookTrip

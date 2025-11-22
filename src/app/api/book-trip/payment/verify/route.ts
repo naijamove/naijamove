@@ -2,7 +2,6 @@ import { connectToDb } from "@/db/connectDb";
 import BookTrip from "@/models/book-trip";
 
 import { NextRequest, NextResponse } from "next/server";
-import { success } from "zod";
 
 
 
@@ -50,6 +49,7 @@ try {
         {
             transactionId:verifyData.data.id,
             paymentStatus:"successful",
+            paymentRef:verifyData.data.flw_ref
         },
         {new:true}
     

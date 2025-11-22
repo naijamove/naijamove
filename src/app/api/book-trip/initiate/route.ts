@@ -14,7 +14,7 @@ if (!dbConnect.success) {
 }
 
 try {
-    const createTrip = await BookTrip.create({...details,paymentStatus:"pending"})
+    const createTrip = await BookTrip.create({...details,paymentStatus:"pending",paymentRef:null})
 
 if (!createTrip) {
     return NextResponse.json({success:false,message:"an error occured"})
