@@ -294,7 +294,7 @@ useEffect(()=>{
 // for futa
   if (school == "FUTA") {
     if (destination == "Ibadan") {
-      setFarePrice(4500)
+      setFarePrice(4800)
       return
       
     }else if (destination == "Lagos") {
