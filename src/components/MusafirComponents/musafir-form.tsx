@@ -178,25 +178,6 @@ const email = "aadebesta@gmail.com"
 
 
 
-// const handleCheck = async()=>{
-//   const res = await fetch("/api/book-trip/payment/verify",{
-//     method:"POST",
-//     headers:{
-//       "Content-Type":"application/json"
-//     },
-//     body:JSON.stringify({transaction_id:1923206313, tx_ref:"trx-ce703eed-1c2e-43f2-b534-4faf8e74bffc"})
-//   })
-//   const verifyResponse = await res.json()
-
-//   console.log(verifyResponse);
-//   if (verifyResponse.success) {
-//     openModal("you have successfully booked a trip")
-
-//   }
-// }
-// useEffect(()=>{
-// handleCheck()
-// },[])
 
 
 async function handleFormSubmit(formDetails:Partial<formDetails>) {
@@ -218,50 +199,12 @@ async function handleFormSubmit(formDetails:Partial<formDetails>) {
 
 
 
-      // useEffect(()=>{
-      //   const dataTime = new Date()
-      //   console.log(dataTime);
-      // },[])
-      // 2. Define a submit handler.
       function onSubmit(values: z.infer<typeof formSchema>) {
 
         const id = uuidv4()
         mutation.mutate({...values})
  
-        // const config = {
-        //   public_key: process.env.NEXT_PUBLIC_FW_PUBLIC_KEY as string,
-        //   tx_ref: `trx-${Date.now()}`,
-        //   amount: farePrice,
-        //   currency: "NGN",
-      
-        //   customer: {
-        //     email: values.email,
-        //     name: values.firstName,
-        //     phone_number: values.phoneNumber,
-        //   },
-      
-        //   meta: {
-        //     bookingId:uuidv4(),
-        //   },
-      
-        //   customizations: {
-        //     title: "Transport Booking",
-        //     description: "Payment for booking",
-        //     logo: "/logo.png",
-        //   },
-      
-        //   callback: (response: any) => {
-        //     console.log("Payment response:", response);
-        //     // close modal automatically
-        //   },
-      
-        //   onclose: () => {
-        //     console.log("Payment closed");
-        //   },
-        // };
-      
-      
-        // window.FlutterwaveCheckout(config);
+       
        
        
         
@@ -322,7 +265,77 @@ useEffect(()=>{
       }
       setFarePrice(0)
       return
-     
+      
+    }
+    // for Ibadan premium ride
+    else if (school == "Ibadan(Premium-Ride)") {
+      if (destination == "Ikole") {
+        setFarePrice(11600)
+      }else if (destination == "Oye-Ekiti") {
+      setFarePrice(10600)
+      
+    }
+    else{
+      setFarePrice(0)
+    }
+
+
+  }
+    // for Ibadan Regular Ride
+    else if (school == "Ibadan(Regular-Ride)") {
+      if (destination == "Ikole") {
+        setFarePrice(8700)
+      }else if (destination == "Oye-Ekiti") {
+      setFarePrice(9700)
+      
+    }
+    else{
+      setFarePrice(0)
+    }
+
+
+  }
+    // for Lagos Premium Ride
+    else if (school == "Lagos(Premium-Ride)") {
+      if (destination == "Ikole") {
+        setFarePrice(16000)
+      }else if (destination == "Oye") {
+      setFarePrice(15000)
+      
+    }
+    else{
+      setFarePrice(0)
+    }
+
+
+  }
+    // for Lagos Regular Ride
+    else if (school == "Lagos(Regular-Ride)") {
+      if (destination == "Ikole") {
+        setFarePrice(13500)
+      }else if (destination == "Oye") {
+      setFarePrice(12500)
+      
+    }
+    else{
+      setFarePrice(0)
+    }
+
+
+  }
+    // for Osun 
+    else if (school == "Osun") {
+      if (destination == "Ikole") {
+        setFarePrice(7000)
+      }else if (destination == "Oye") {
+      setFarePrice(6000)
+      
+    }
+    else{
+      setFarePrice(0)
+    }
+
+
   }
 
   else{
@@ -424,7 +437,7 @@ useEffect(()=>{
   name="school"
   render={({ field }) => (
     <FormItem className="w-full">
-      <FormLabel>Schools</FormLabel>
+      <FormLabel>Pick up Location</FormLabel>
       <Select 
         onValueChange={field.onChange}
        defaultValue={field.value}>
