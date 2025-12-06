@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   console.log(req.nextUrl.pathname);
   if (req.nextUrl.pathname === "/") {
     const url = req.nextUrl.clone()

@@ -25,16 +25,16 @@ export const schoolsAndDestination:typeSchoolAndLocations[] = [
   school:"FUOYE",
   destinations:["Ibadan","Lagos","Osogbo"]
 },
-{
-    id:5,
-  school:"LASU",
-  destinations:[],
-},
-{
-    id:6,
-  school:"TASUED",
-  destinations:[],
-},
+// {
+//     id:5,
+//   school:"LASU",
+//   destinations:[],
+// },
+// {
+//     id:6,
+//   school:"TASUED",
+//   destinations:[],
+// },
 {
     id:7,
   school:"FUNAAB",
@@ -49,6 +49,31 @@ export const schoolsAndDestination:typeSchoolAndLocations[] = [
     id:9,
   school:"PSSA AKURE",
   destinations:["Ibadan","OUI"],
+},
+{
+    id:10,
+  school:"Ibadan(Premium-Ride)",
+  destinations:["Ikole","Oye-Ekiti"],
+},
+{
+    id:11,
+  school:"Ibadan(Regular-Ride)",
+  destinations:["Ikole","Oye-Ekiti"],
+},
+{
+    id:12,
+  school:"Lagos(Premium-Ride)",
+  destinations:["Ikole","Oye"],
+},
+{
+    id:13,
+  school:"Lagos(Regular-Ride)",
+  destinations:["Ikole","Oye"],
+},
+{
+    id:14,
+  school:"Osun",
+  destinations:["Ikole","Oye"],
 },
 
 ]
