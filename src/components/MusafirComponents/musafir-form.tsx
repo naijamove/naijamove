@@ -267,62 +267,46 @@ useEffect(()=>{
       return
       
     }
-    // for Ibadan premium ride
-    else if (school == "Ibadan(Premium-Ride)") {
-      if (destination == "Ikole") {
-        setFarePrice(11600)
-      }else if (destination == "Oye-Ekiti") {
+    // For fuoye 
+   else if (school == "FUOYE") {
+    if (destination == "Oye-Ekiti - Ibadan(Premium Ride)") {
       setFarePrice(10600)
+    }
+    else if (destination == "Oye-Ekiti - Ibadan(Regular Ride)") {
+      setFarePrice(8700)
       
     }
-    else{
-      setFarePrice(0)
+    else if (destination == "Ikole - Ibadan(Premium Ride)") {
+      setFarePrice(11600)
+      
     }
-
-
-  }
-    // for Ibadan Regular Ride
-    else if (school == "Ibadan(Regular-Ride)") {
-      if (destination == "Ikole") {
-        setFarePrice(8700)
-      }else if (destination == "Oye-Ekiti") {
+    else if (destination == "Ikole - Ibadan(Regular Ride)") {
       setFarePrice(9700)
       
     }
-    else{
-      setFarePrice(0)
-    }
-
-
-  }
-    // for Lagos Premium Ride
-    else if (school == "Lagos(Premium-Ride)") {
-      if (destination == "Ikole") {
-        setFarePrice(16000)
-      }else if (destination == "Oye") {
+    else if (destination == "Oye - Lagos(Premium Ride)") {
       setFarePrice(15000)
       
     }
-    else{
-      setFarePrice(0)
-    }
-
-
-  }
-    // for Lagos Regular Ride
-    else if (school == "Lagos(Regular-Ride)") {
-      if (destination == "Ikole") {
-        setFarePrice(13500)
-      }else if (destination == "Oye") {
+    else if (destination == "Oye - Lagos(Regular Ride)") {
       setFarePrice(12500)
       
     }
-    else{
-      setFarePrice(0)
+    else if (destination == "Ikole - Lagos(Premium Ride)") {
+      setFarePrice(16000)
+      
     }
+    else if (destination == "Ikole - Lagos(Regular Ride)") {
+      setFarePrice(13500)
+      
+    }
+    
+    else{
+      setFarePrice(13500)
 
-
-  }
+    }
+    
+   }
     // for Osun 
     else if (school == "Osun") {
       if (destination == "Ikole") {
