@@ -314,6 +314,7 @@ useEffect(()=>{
       }else if (destination == "Oye") {
       setFarePrice(6000)
       
+      
     }
     else{
       setFarePrice(0)
