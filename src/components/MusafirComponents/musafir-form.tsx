@@ -314,12 +314,21 @@ useEffect(()=>{
       }else if (destination == "Oye") {
       setFarePrice(6000)
       
+      
     }
     else{
       setFarePrice(0)
     }
 
 
+  }
+  else if (school == "LAUTECH") {
+    if (destination == "Ibadan") {
+      setFarePrice(2900)
+    }else if (destination == "Oyo") {
+    setFarePrice(1900)
+    
+  }
   }
 
   else{
